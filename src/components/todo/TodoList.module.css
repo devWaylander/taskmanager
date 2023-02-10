@@ -1,3 +1,13 @@
-.todosList {
-    align-items: baseline;
-  }
+.todoList {
+  align-items: baseline;
+  color: black;
+  overflow: hidden;
+  overflow-y: auto;
+}
+.todoTextColor {
+  color: var(--text-color);
+}
+
+.todoDateColor {
+  color: #cdcdcd;
+}

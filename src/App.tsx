@@ -1,19 +1,20 @@
-import React from 'react';
-import styles from './App.module.css';
-import ToDo from './components/todo/ToDo';
-import { TodoContextProvider } from './wrappers/TodoContext';
+import React from "react";
+import styles from "./App.module.css";
+import TextInput from "./components/inputs/TextInput/TextInput";
+import TodoList from "./components/todo/TodoList";
+import { TodoContextProvider } from "./wrappers/TodoContext";
 
 function App() {
   return (
     <div className={styles.app}>
-      <header className={styles.appHeader}>
-        Task Manager
-        <div className={styles.appList}>
+      <header className={styles.header}>Task Manager</header>
+      <div className={styles.container}>
+        <h1 className={styles.listTitle}>Work</h1>
         <TodoContextProvider>
-          <ToDo/>
+          <TextInput />
+          <TodoList />
         </TodoContextProvider>
-        </div>
-      </header>
+      </div>
     </div>
   );
 }

@@ -1,62 +1,85 @@
+import { v4 as uuid } from "uuid";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 
-type TodoContextState = {
-  todos: Todo[],
-  addTodo: (todo: Todo) => void,
-  deleteTodo: (text: string) => void,
-  completeTodo: (text: string) => void,
-}
+const dataKey = "todos";
 
-const loadFromLocalStorage = (key: string) => {
-  let todos:Todo[] = [ {"id": "", "text":""} ];
-  if (localStorage.getItem(key)) {
-    todos = JSON.parse(localStorage.getItem(key) ?? "");
+export type Todo = {
+  id: string;
+  text: string;
+  date?: string;
+};
+
+type TodoContextState = {
+  todos: Todo[];
+  addTodo: (text: string) => void;
+  deleteTodo: (id: string) => void;
+  setCompleteTodo: (id: string, checked: boolean) => void;
+};
+
+const loadFromLocalStorage = () => {
+  let todos: Todo[];
+  if (localStorage.getItem(dataKey)) {
+    todos = JSON.parse(localStorage.getItem(dataKey) ?? "");
+    if (!todos) return [];
+
+    todos = todos.filter((v) => !v.date);
+    localStorage.setItem(dataKey, JSON.stringify(todos));
+
     return todos;
   } else {
     return [];
   }
-}
+};
 
-export const TodoContext = React.createContext<TodoContextState>({} as TodoContextState);
+export const TodoContext = React.createContext<TodoContextState>(
+  {} as TodoContextState
+);
 
-export const TodoContextProvider = ({children}:React.PropsWithChildren<{}>) => {
-  const dataKey = 'todos';
-  const [todos, setTodos] = useState<Todo[]>(loadFromLocalStorage(dataKey));
+export const TodoContextProvider = ({
+  children,
+}: React.PropsWithChildren<{}>) => {
+  const [todos, setTodos] = useState<Todo[]>(loadFromLocalStorage());
 
   useEffect(() => {
     localStorage.setItem(dataKey, JSON.stringify(todos));
   }, [todos]);
 
-  const value = useMemo(() => ({
-    todos:todos,
-    addTodo: (todo:Todo) => {
-      if (todo.id !== "" && todo.text !== "") {
-        setTodos([...todos, {"id": todo.id, "text": todo.text}]);
-      }
-    },
-    deleteTodo: (text:string) => {
-      const newTodos = todos.filter((todo) => {
-        return todo.text !== text;
-      });
-      setTodos(newTodos);
-    },
-    // ?????
-    completeTodo: (text:string) => {
-
-    }
-  }), [todos]);
-
-  return (
-    <TodoContext.Provider value={ value }>
-      { children }
-    </TodoContext.Provider>
+  const value = useMemo(
+    () => ({
+      todos: todos,
+      addTodo: (text: string) => {
+        if (text !== "") {
+          setTodos((prev) => [...prev, { id: uuid(), text: text }]);
+        }
+      },
+      deleteTodo: (id: string) => {
+        setTodos((prev) =>
+          prev.filter((todo) => {
+            return todo.id !== id;
+          })
+        );
+      },
+      setCompleteTodo: (id: string, checked: boolean) => {
+        setTodos((prev) =>
+          prev.map((v: Todo) => {
+            if (v.id === id) {
+              if (checked)
+                v.date = new Date().toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                });
+              else v.date = undefined;
+            }
+            return v;
+          })
+        );
+      },
+    }),
+    [todos]
   );
-}
 
-export type Todo = {
-  id:string,
-  text:string,
-  date?:string
-}
+  return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
+};
 
-export const useTodoContext = ():TodoContextState => useContext(TodoContext);
+export const useTodoContext = (): TodoContextState => useContext(TodoContext);

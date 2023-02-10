@@ -1,34 +1,56 @@
-import React, { useId, useState } from "react";
-import styles from './TextInput.module.css';
-import { useThemeContext } from "../../../wrappers/ThemeContext";
-import type { Todo } from "../../../wrappers/TodoContext";
+import React, { useId, useRef, useState } from "react";
+import styles from "./TextInput.module.css";
+import { useTodoContext } from "../../../wrappers/TodoContext";
+import cx from "classnames";
 
-type TextInputProps = {
-  addTodo: (todoText: Todo) => void
-}
-
-export const TextInput = ({addTodo}: TextInputProps) => {
-  const [todoText, setTodoText] = useState<string>("");
-  const {style} = useThemeContext();
-  // TODO: fix to unique
-  const id:string = useId();
+export const TextInput = () => {
+  const [inputValue, setInputValue] = useState<string>("");
+  const [active, setActive] = useState<boolean>(false);
+  const { addTodo } = useTodoContext();
 
   return (
-    <div>
-      <button className={styles.addTodoButton} 
-      style={ {"background": style.elementsBackground, color: style.foreground} }
-      onClick={() => {
-        addTodo({"id": id, "text": todoText})
-      }}>
-      </button>
-      <input className={styles.textInput} type={"text"} size={50} maxLength={250}
-      placeholder={"Add new task"}
-      style={ {"background": style.elementsBackground, "color": style.foreground} }
-      onChange={(e) => {
-        setTodoText(e.target.value)
-      }}/>
+    <div
+      className={cx(styles.inputWrapper, { [styles.wrapperActive]: active })}
+    >
+      <div className={styles.plusWrapper}>
+        <div className={styles.plus} />
+      </div>
+      <input
+        className={styles.textInput}
+        type={"text"}
+        size={50}
+        maxLength={250}
+        placeholder={"Add new task"}
+        onBlur={() => setActive(false)}
+        onFocus={() => setActive(true)}
+        onChange={(e) => {
+          let value = e.target?.value || "";
+          setInputValue(value);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            addTodo(inputValue);
+            setInputValue("");
+          }
+        }}
+        value={inputValue}
+      />
+      {(active || inputValue) && (
+        <button
+          className={cx(styles.addButton, {
+            [styles.buttonActive]: !!inputValue,
+          })}
+          disabled={!inputValue}
+          onClick={() => {
+            addTodo(inputValue);
+            setInputValue("");
+          }}
+        >
+          Add
+        </button>
+      )}
     </div>
   );
-}
+};
 
-export default TextInput
+export default TextInput;

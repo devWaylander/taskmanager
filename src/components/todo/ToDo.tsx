@@ -1,19 +1,16 @@
-import React from 'react';
-import { useTodoContext } from '../../wrappers/TodoContext';
-import TextInput from '../inputs/TextInput/TextInput';
-import TodoList from './TodoList';
+import React from "react";
+import TextInput from "../inputs/TextInput/TextInput";
+import TodoList from "./TodoList";
 
 export const ToDo = () => {
-  const {todos, addTodo, deleteTodo, completeTodo} = useTodoContext()
-
   return (
     <div>
       <div>
-        <TextInput addTodo={addTodo}/>
-        <TodoList todos={todos} deleteTodo={deleteTodo} completeTodo={completeTodo}/>
+        <TextInput />
+        <TodoList />
       </div>
     </div>
   );
-}
+};
 
-export default ToDo
+export default ToDo;
