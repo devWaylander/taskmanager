@@ -1,0 +1,23 @@
+.app {
+  text-align: center;
+  background-color: #11A9EC ;
+}
+
+.appHeader {
+  font-family: 'SF Pro Text Semibold';
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  color: white;
+}
+
+.appList {
+  width: 640px;
+  height: 600px;
+  background-color: #F7F7F7;
+  border: 1px solid #F7F7F7;
+  border-radius: 0.25rem;
+}
