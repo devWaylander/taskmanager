@@ -6,7 +6,7 @@ const dataKey = "todos";
 export type Todo = {
   id: string;
   text: string;
-  date?: string;
+  compleationDate?: Date;
 };
 
 type TodoContextState = {
@@ -22,7 +22,7 @@ const loadFromLocalStorage = () => {
     todos = JSON.parse(localStorage.getItem(dataKey) ?? "");
     if (!todos) return [];
 
-    todos = todos.filter((v) => !v.date);
+    todos = todos.filter((v) => !v.compleationDate);
     localStorage.setItem(dataKey, JSON.stringify(todos));
 
     return todos;
@@ -63,13 +63,8 @@ export const TodoContextProvider = ({
         setTodos((prev) =>
           prev.map((v: Todo) => {
             if (v.id === id) {
-              if (checked)
-                v.date = new Date().toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "2-digit",
-                  year: "numeric",
-                });
-              else v.date = undefined;
+              if (checked) v.compleationDate = new Date();
+              else v.compleationDate = undefined;
             }
             return v;
           })

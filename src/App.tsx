@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./App.module.css";
-import TextInput from "./components/inputs/TextInput/TextInput";
-import TodoList from "./components/todo/TodoList";
+import AddInput from "./components/inputs/AddInput/AddInput";
+import TodoList from "./components/TodoList/TodoList";
 import { TodoContextProvider } from "./wrappers/TodoContext";
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
       <div className={styles.container}>
         <h1 className={styles.listTitle}>Work</h1>
         <TodoContextProvider>
-          <TextInput />
+          <AddInput />
           <TodoList />
         </TodoContextProvider>
       </div>

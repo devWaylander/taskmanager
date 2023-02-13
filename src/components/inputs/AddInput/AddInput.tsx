@@ -1,9 +1,9 @@
-import React, { useId, useRef, useState } from "react";
-import styles from "./TextInput.module.css";
+import React, { useState } from "react";
+import styles from "./AddInput.module.css";
 import { useTodoContext } from "../../../wrappers/TodoContext";
 import cx from "classnames";
 
-export const TextInput = () => {
+export const AddInput = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [active, setActive] = useState<boolean>(false);
   const { addTodo } = useTodoContext();
@@ -53,4 +53,4 @@ export const TextInput = () => {
   );
 };
 
-export default TextInput;
+export default AddInput;

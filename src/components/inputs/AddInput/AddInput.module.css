@@ -21,7 +21,7 @@
 .addButton {
   all: unset;
   cursor: pointer;
-  font-weight: 900;
+  font-weight: var(--heavy-bold);
   font-size: 18px;
   color: var(--inactive-color);
   letter-spacing: 0;
